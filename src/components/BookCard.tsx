@@ -1,5 +1,4 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
 import { MdFavoriteBorder, MdFavorite } from 'react-icons/md'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import styled from 'styled-components'
@@ -96,7 +95,6 @@ type Props = {
 export const BookCard: React.FC<Props> = ({ book }) => {
   const [showContent, setShowContent] = React.useState<boolean>(false)
   const [isFavorite, setIsFavorite] = React.useState<boolean>(false)
-  const navigate = useNavigate()
 
   return (
     <BookItem>
