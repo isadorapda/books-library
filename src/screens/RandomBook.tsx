@@ -203,12 +203,14 @@ export const RandomBook: React.FC = () => {
             <img
               src={
                 bookDetails?.cover_edition_key
-                  ? OPEN_LIBRARY_COVERS_BASE_API +
-                    bookDetails.cover_edition_key +
-                    '-M.jpg'
+                  ? OPEN_LIBRARY_COVERS_BASE_API(bookDetails.cover_edition_key)
                   : require('../images/no-image.png')
               }
-              alt=""
+              alt={
+                bookDetails?.cover_edition_key
+                  ? `Cover of the book ${bookDetails.title}`
+                  : `The book ${bookDetails.title} has no cover available`
+              }
             />
           ) : null}
           <BookInfo>

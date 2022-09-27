@@ -1,7 +1,7 @@
 import React from 'react'
 import { BiSearchAlt2 } from 'react-icons/bi'
 import Select from 'react-select'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { BookCard } from '../components/BookCard'
 import {
   OPEN_LIBRARY_BASE_API,
@@ -65,6 +65,32 @@ const SearchContainer = styled.div`
     right: 10px;
   }
 `
+const flash = keyframes`
+  0%{
+    background-color: #95b9f1;
+    box-shadow: 32px 0 #95b9f1, -32px 0 #6ca0f4;
+  }
+  50%{
+    background-color: #6ca0f4;
+    box-shadow: 32px 0 #95b9f1, -32px 0  #95b9f1;
+  }
+  100%{
+    background-color: #95b9f1;
+    box-shadow: 32px 0 #6ca0f4, -32px 0  #6ca0f4; 
+  }
+`
+const LoadinBook = styled.span`
+  margin-top: 50px;
+  &.loader {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #6ca0f4;
+    box-shadow: 32px 0 #6ca0f4, -32px 0 #6ca0f4;
+    position: relative;
+    animation: ${flash} 0.5s ease-out infinite alternate;
+  }
+`
 
 function Search() {
   const [searchTerm, setSearchTerm] = React.useState<string>('')
@@ -76,7 +102,7 @@ function Search() {
 
   const fetchSearchTerm = () => {
     setIsLoading(true)
-    const queryParams = '?q=' + searchTerm.trim().replaceAll(/\s+/g, '+')
+    const queryParams = `?q=${searchTerm.trim().replaceAll(/\s+/g, '+')}`
     const endpoint =
       OPEN_LIBRARY_BASE_API + OPEN_LIBRARY_SEARCH_API + queryParams
     fetch(endpoint)
@@ -121,16 +147,18 @@ function Search() {
       </Filters>
 
       <h4>
-        {searchTerm === ''
-          ? 'Type keywords in the search input to find your next book!'
-          : isLoading
-          ? 'Searching...'
-          : data.num_found === 0
-          ? `Sorry, we couln'd find any book based on your search terms.`
-          : ` We found ${data.num_found} book${
-              data.num_found === 1 ? '' : 's'
-            } matching
-        your search:`}
+        {searchTerm === '' ? (
+          ' Type keywords in the search input to find your next book!'
+        ) : isLoading ? (
+          <LoadinBook className="loader"></LoadinBook>
+        ) : data.num_found === 0 ? (
+          `Sorry, we couln'd find any book based on your search terms.`
+        ) : (
+          ` We found ${data.num_found} book${
+            data.num_found === 1 ? '' : 's'
+          } matching
+        your search:`
+        )}
       </h4>
       <div>
         {data.docs.map((book) => (

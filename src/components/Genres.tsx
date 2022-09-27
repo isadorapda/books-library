@@ -88,17 +88,14 @@ const SingleBookArticle = styled.article`
 `
 
 export const Genres: React.FC = () => {
-  const [bookSubjectData, setBookSubjectData] = React.useState<
+  const [bookSubjectsData, setBookSubjectsData] = React.useState<
     DataSubjectApi[]
   >([])
 
   React.useEffect(() => {
     async function fetchBookSubjectsData() {
       const endpoints = BOOK_SUBJECTS.map(
-        (subject) =>
-          `${
-            OPEN_LIBRARY_BASE_API + OPEN_LIBRARY_SUBJECTS_API
-          }${subject}.json?details=true`
+        (subject) => OPEN_LIBRARY_BASE_API + OPEN_LIBRARY_SUBJECTS_API(subject)
       )
       const requests = endpoints.map((endpoint) => fetch(endpoint))
       const responses = await Promise.all(requests)
@@ -106,7 +103,7 @@ export const Genres: React.FC = () => {
       for (const response of responses) {
         data.push(await response.json())
       }
-      setBookSubjectData(data)
+      setBookSubjectsData(data)
     }
     fetchBookSubjectsData()
   }, [])
@@ -116,7 +113,7 @@ export const Genres: React.FC = () => {
       <h2>Genres</h2>
 
       <SubjectsGrid>
-        {bookSubjectData.map(({ works, name, key }) => (
+        {bookSubjectsData.map(({ works, name, key }) => (
           <BooksGrid key={key}>
             <SubjectName>{name}</SubjectName>
             <SectionGenres>
@@ -125,8 +122,7 @@ export const Genres: React.FC = () => {
                   <img
                     src={
                       work.cover_edition_key
-                        ? OPEN_LIBRARY_COVERS_BASE_API +
-                          `${work.cover_edition_key}-M.jpg`
+                        ? OPEN_LIBRARY_COVERS_BASE_API(work.cover_edition_key)
                         : require('../images/no-image.png')
                     }
                     alt=""
