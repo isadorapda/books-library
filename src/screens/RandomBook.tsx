@@ -138,7 +138,6 @@ export const RandomBook: React.FC = () => {
   const firstClickHappened = React.useRef<boolean>(false)
 
   const getRandomBook = React.useCallback(async () => {
-    console.log('getRandomBook')
     firstClickHappened.current = true
     setIsLoading(true)
     const openLibraryId = `${Math.floor(Math.random() * 10000000)}`
@@ -157,7 +156,6 @@ export const RandomBook: React.FC = () => {
 
   React.useEffect(() => {
     if (book.title) {
-      console.log('useEffect')
       const queryParams = `?q=${book.title.trim().replaceAll(' ', '+')}`
       const endpoint =
         OPEN_LIBRARY_BASE_API + OPEN_LIBRARY_SEARCH_API + queryParams
@@ -187,7 +185,6 @@ export const RandomBook: React.FC = () => {
         })
     }
   }, [book, getRandomBook])
-  console.log('reference', bookDetails)
 
   return (
     <RandomWrapper>
