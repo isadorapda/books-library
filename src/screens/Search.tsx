@@ -1,6 +1,5 @@
 import React from 'react'
 import { BiSearchAlt2 } from 'react-icons/bi'
-import Select from 'react-select'
 import styled, { keyframes } from 'styled-components'
 import { BookCard } from '../components/BookCard'
 import {
@@ -8,10 +7,6 @@ import {
   OPEN_LIBRARY_SEARCH_API,
 } from '../constants/endpoints'
 import { DataSearchApi } from '../types/Model'
-import {
-  SELECT_SUBJECT_OPTIONS,
-  SELECT_LANGUAGE_OPTIONS,
-} from '../constants/bookInfos'
 
 const SearchWrapper = styled.div`
   display: grid;
@@ -32,12 +27,6 @@ const Filters = styled.div`
   }
   h3 {
     color: #f5efe6;
-  }
-  .react-select-selectContainer {
-    width: 80%;
-    border-radius: 8px;
-    box-shadow: 0 0 10px 1px #adadad92;
-    background-color: #f5efe6;
   }
 `
 const SearchContainer = styled.div`
@@ -118,15 +107,7 @@ function Search() {
       <Filters>
         <h2>Filters</h2>
         <h3>Subjects</h3>
-        <Select
-          options={SELECT_SUBJECT_OPTIONS}
-          className="react-select-selectContainer"
-        />
-        <h3>Languages</h3>
-        <Select
-          options={SELECT_LANGUAGE_OPTIONS}
-          className="react-select-selectContainer"
-        />
+
         <SearchContainer>
           <input
             placeholder="What are you looking for?"

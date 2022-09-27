@@ -137,12 +137,14 @@ export const BookCard: React.FC<Props> = ({ book }) => {
             <img
               src={
                 book.cover_edition_key
-                  ? OPEN_LIBRARY_COVERS_BASE_API +
-                    book.cover_edition_key +
-                    '-M.jpg'
+                  ? OPEN_LIBRARY_COVERS_BASE_API(book.cover_edition_key)
                   : require('../images/no-image.png')
               }
-              alt=""
+              alt={
+                book?.cover_edition_key
+                  ? `Cover of the book ${book.title}`
+                  : `The book ${book.title} has no cover available`
+              }
             />
           </BookCover>
         </HiddenContent>
