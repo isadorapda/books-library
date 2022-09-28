@@ -8,6 +8,7 @@ export interface BookSearchApi {
   cover_edition_key: string
   language?: string[]
   isbn: string[]
+  number_of_pages_median?: number
 }
 
 export interface DataSearchApi {
