@@ -1,7 +1,7 @@
 import React from 'react'
 import { BiSearchAlt2 } from 'react-icons/bi'
 import { RiDeleteBack2Line } from 'react-icons/ri'
-import styled, { css, keyframes } from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { BookCard } from '../components/BookCard'
 import {
   OPEN_LIBRARY_BASE_API,
@@ -46,20 +46,8 @@ const ButtonActionInput = styled.button<{ buttonColor: string }>`
   border: none;
   position: absolute;
   right: 0px;
-  ${({ buttonColor }) => {
-    switch (buttonColor) {
-      case '#df7861':
-        return css`
-          background-color: #df7861;
-          color: #fcf8e8;
-        `
-      default:
-        return css`
-          background-color: #94b49f;
-          color: #fcf8e8;
-        `
-    }
-  }};
+  color: #fcf8e8;
+  background-color: ${({ buttonColor }) => buttonColor};
 `
 const SearchResults = styled.div`
   display: flex;
@@ -111,7 +99,7 @@ const DATA_INITIAL_STATE = {
   docs: [],
 }
 function Search() {
-  const [searchTerm, setSearchTerm] = React.useState<string>('harry')
+  const [searchTerm, setSearchTerm] = React.useState<string>('')
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [data, setData] = React.useState<DataSearchApi>(DATA_INITIAL_STATE)
@@ -122,6 +110,7 @@ function Search() {
   React.useEffect(() => {
     if (!searchTerm) {
       setData(DATA_INITIAL_STATE)
+      searchClickHappened.current = false
     }
   }, [searchTerm])
 
@@ -145,7 +134,7 @@ function Search() {
     setData(DATA_INITIAL_STATE)
   }
 
-  const resultSearch = () => {
+  const getSearchResultLabel = (): string => {
     if (!searchTerm && !searchClickHappened.current) {
       return ''
     }
@@ -159,7 +148,7 @@ function Search() {
 
   return (
     <SearchWrapper>
-      <h2>Type keywords in the search input to find your next book!</h2>
+      <h2>Type keywords in the search box to find your next book!</h2>
       <SearchContainer>
         <input
           placeholder="What are you looking for?"
@@ -192,7 +181,7 @@ function Search() {
             onClick={fetchSearchTerm}
             disabled={!searchTerm}
             title="Search"
-            buttonColor="#fcf8e8"
+            buttonColor="#94B49F"
           >
             <BiSearchAlt2 />
           </ButtonActionInput>
@@ -204,7 +193,7 @@ function Search() {
       ) : (
         <SearchResults>
           <HeaderResults>
-            {searchClickHappened.current ? resultSearch() : null}
+            {searchClickHappened.current ? getSearchResultLabel() : null}
           </HeaderResults>
           <GridResults>
             {data.docs.map((book) => (
