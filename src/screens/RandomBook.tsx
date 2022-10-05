@@ -19,41 +19,53 @@ const RandomWrapper = styled.div`
   width: 70vw;
   position: relative;
   h1 {
-    margin: 100px 0 20px 0;
-    font-family: 'Inconsolata', monospace;
-    font-size: 2.6rem;
+    margin: 100px 0 50px 0;
+  }
+  h3 {
+    color: #94b49f;
   }
 `
 const Button = styled.button`
-  margin: 30px 0;
-  padding: 6px 10px;
+  margin: 90px 0;
+  width: 200px;
+  padding: 10px 15px;
+  box-shadow: 2px 2px 9px 0.5px #8181817b;
   border-radius: 8px;
-  border: 1px solid #7eabf32e;
-  background-color: #7eabf32e;
-  color: #2e63b9ec;
+  border: transparent;
+  background-color: #ecb390;
+  color: #df7861;
   text-transform: uppercase;
   font-family: 'Montserrat', sans-serif;
-  font-weight: 400;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
   &:hover {
     color: white;
-    background-color: #6ca0f445;
-    font-size: 1.1rem;
+    box-shadow: 4px 4px 5px 1px #8181817b;
   }
 `
 const flash = keyframes`
   0%{
-    background-color: #95b9f1;
-    box-shadow: 32px 0 #95b9f1, -32px 0 #6ca0f4;
+    background-color: #ecb390;
+    box-shadow: 32px 0 #ecb390, -32px 0 #df7861;
   }
   50%{
-    background-color: #6ca0f4;
-    box-shadow: 32px 0 #95b9f1, -32px 0  #95b9f1;
+    background-color: #df7861;
+    box-shadow: 32px 0 #ecb390, -32px 0  #ecb390;
   }
   100%{
-    background-color: #95b9f1;
-    box-shadow: 32px 0 #6ca0f4, -32px 0  #6ca0f4; 
+    background-color: #ecb390;
+    box-shadow: 32px 0 #df7861, -32px 0  #df7861; 
+  }
+`
+const appear = keyframes`
+  0%{
+opacity: 1;
+width: 0;
+  }
+  100%{
+    opacity: 1;
+width: 80%;
   }
 `
 const LoadinBook = styled.span`
@@ -62,55 +74,86 @@ const LoadinBook = styled.span`
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background-color: #6ca0f4;
-    box-shadow: 32px 0 #6ca0f4, -32px 0 #6ca0f4;
+    background-color: #df7861;
+    box-shadow: 32px 0 #df7861, -32px 0 #df7861;
     position: relative;
     animation: ${flash} 0.5s ease-out infinite alternate;
   }
 `
-const RandomBookContainer = styled.div`
-  width: 70%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+const slideIn = keyframes`
+  0%{
+    transform: translateX(-100%);
+  }
+  100%{
+    transform: translateX(0%);
+  }
 
+`
+const RandomBookContainer = styled.div`
+  width: 100vw;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin-bottom: 30px;
+`
+const CoverContainer = styled.div`
+  background-color: #94b49f;
+  height: 500px;
+  width: 100%;
+  grid-column: 1;
+  box-shadow: 4px 4px 5px 1px #8181817b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: ${slideIn} 0.5s ease-in;
   img {
-    height: 250px;
-    width: fit-content;
-    margin-bottom: 30px;
+    height: 70%;
+    object-fit: cover;
+    box-shadow: 0 0 10px 1px #8181817b;
   }
 `
+
 const BookInfo = styled.div`
+  grid-column: 2;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-left: 15px;
+  align-items: flex-start;
+  justify-content: center;
+  margin-left: 30px;
   margin-bottom: 50px;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  animation: ${appear} 4s steps(60, end) forwards;
 
   h2 {
     margin-bottom: 20px;
-    font-family: 'Montserrat', sans-serif;
+    max-width: 200px;
     font-weight: 300;
     text-transform: capitalize;
     letter-spacing: 1px;
-    text-align: center;
+    animation-delay: 1s;
   }
   h3 {
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: #2e63b9ec;
+    color: #94b49f;
     margin-bottom: 20px;
-    text-align: center;
     font-size: 1rem;
+    animation-delay: 2s;
+    width: 70%;
   }
 `
 const ListGenres = styled.div`
   display: flex;
   flex-direction: column;
-
   h4 {
-    text-align: center;
     margin-bottom: 15px;
+    animation-delay: 1.4s;
+  }
+  li {
+    animation-delay: 1.6s;
+    line-height: 20px;
+    list-style: circle;
   }
 `
 
@@ -197,18 +240,22 @@ export const RandomBook: React.FC = () => {
       ) : (
         <RandomBookContainer>
           {firstClickHappened.current ? (
-            <img
-              src={
-                bookDetails?.cover_edition_key
-                  ? OPEN_LIBRARY_COVERS_BASE_API(bookDetails.cover_edition_key)
-                  : require('../images/no-image.png')
-              }
-              alt={
-                bookDetails?.cover_edition_key
-                  ? `Cover of the book ${bookDetails.title}`
-                  : `The book ${bookDetails.title} has no cover available`
-              }
-            />
+            <CoverContainer>
+              <img
+                src={
+                  bookDetails?.cover_edition_key
+                    ? OPEN_LIBRARY_COVERS_BASE_API(
+                        bookDetails.cover_edition_key
+                      )
+                    : require('../images/no-image.png')
+                }
+                alt={
+                  bookDetails?.cover_edition_key
+                    ? `Cover of the book ${bookDetails.title}`
+                    : `The book ${bookDetails.title} has no cover available`
+                }
+              />
+            </CoverContainer>
           ) : null}
           <BookInfo>
             <h2>{book.title}</h2>
@@ -216,7 +263,7 @@ export const RandomBook: React.FC = () => {
             {firstClickHappened.current ? (
               <ListGenres>
                 <h4>Genres:</h4>
-                {(bookDetails?.subject || []).map((sub) => (
+                {(bookDetails?.subject || []).slice(0, 10).map((sub) => (
                   <li key={sub}>{sub}</li>
                 ))}
               </ListGenres>

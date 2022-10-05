@@ -17,7 +17,7 @@ const NavBar = styled.nav`
   text-transform: uppercase;
   font-family: 'Montserrat', sans-serif;
   background-color: white;
-  box-shadow: 0 0 15px 0.5px #d4d4d461;
+  box-shadow: 0 0.5px 15px 3px #8181814b;
   img {
     position: absolute;
     left: 50px;

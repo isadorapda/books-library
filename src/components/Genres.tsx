@@ -7,83 +7,91 @@ import {
 } from '../constants/endpoints'
 import { DataSubjectApi } from '../types/Model'
 import { BOOK_SUBJECTS } from '../constants/bookInfos'
+import bookMarker2 from '../images/bookMarker2.svg'
 
 const ContentWrapper = styled.div`
   grid-column: 1/-1;
   width: 100vw;
-  margin: 100px auto 0 auto;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   h2 {
     width: 100%;
-    text-align: left;
-    margin-bottom: 30px;
-    font-family: 'Inconsolata', monospace;
-    color: #7895b2;
-    font-weight: 600;
-    font-size: 1.8rem;
+    text-align: center;
+    margin: 50px 0;
+    color: black;
     padding: 0 30px;
+    font-family: 'Junge', serif;
+    font-size: 2rem;
   }
 `
 const SubjectsGrid = styled.div`
   display: grid;
   grid-template-columns: 100%;
-  max-width: 100%;
+  grid-auto-rows: 450px;
+  row-gap: 50px;
+  width: 100%;
   font-family: 'Montserrat', sans-serif;
 `
 const BooksGrid = styled.div`
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  grid-auto-rows: 350px;
-
-  width: 90%;
-`
-const SubjectName = styled.h3`
-  margin: auto 10px auto 0;
-  grid-column: 1;
-  background-color: #e8dfca;
-  box-shadow: 0 0 10px 0.5px #aaa9a92f;
-  color: #7895b2;
-  font-family: 'Junge', serif;
-  height: 90%;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-const SectionGenres = styled.section`
-  grid-column: 2;
-  display: flex;
-  align-items: center;
-  overflow: scroll;
-  margin-left: 30px;
+  grid-template-columns: 100%;
+  grid-template-rows: 100px 350px;
   width: 100%;
 `
+const SubjectName = styled.div`
+  position: relative;
+  grid-row: 1;
+  height: 41px;
+
+  h3 {
+    color: #fcf8e8;
+    font-family: 'Junge', serif;
+    position: absolute;
+    z-index: 10;
+    top: 5px;
+    left: 30px;
+    height: 100%;
+  }
+  img {
+    z-index: 9;
+    left: -5px;
+    top: 0;
+    position: absolute;
+  }
+`
+const SectionGenres = styled.section`
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  overflow: scroll;
+  grid-row: 2;
+  width: 90%;
+`
 const SingleBookArticle = styled.article`
-  height: 90%;
-  min-width: 160px;
+  height: 350px;
+  min-width: 200px;
   background-color: white;
   border-radius: 2px;
-  box-shadow: 0 0 10px 0.5px #aaa9a92f;
-  margin: 0 9px;
-  padding: 0 5px;
+  box-shadow: 0 0.5px 15px 3px #8181814b;
+  margin: 20px 15px;
+  padding: 5px 9px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 
   img {
     height: 200px;
     width: 100%;
-    object-fit: cover;
+    object-fit: contain;
     padding: 3px;
     margin: 20px 0;
   }
   p {
     text-align: center;
     font-size: 0.8rem;
-    font-family: 'Inconsolata', monospace;
   }
 `
 
@@ -110,15 +118,18 @@ export const Genres: React.FC = () => {
 
   return (
     <ContentWrapper>
-      <h2>Genres</h2>
+      <h2>Subjects</h2>
 
       <SubjectsGrid>
         {bookSubjectsData.map(({ works, name, key }) => (
           <BooksGrid key={key}>
-            <SubjectName>{name}</SubjectName>
+            <SubjectName>
+              <img src={bookMarker2} alt="" />
+              <h3>{name}</h3>
+            </SubjectName>
             <SectionGenres>
               {works.map((work) => (
-                <SingleBookArticle>
+                <SingleBookArticle key={work.key}>
                   <img
                     src={
                       work.cover_edition_key

@@ -13,7 +13,7 @@ const BookItem = styled.article`
   position: relative;
   padding: 20px 6px;
   background-color: white;
-  box-shadow: 0 0 10px 0.5px #aaa9a92f;
+  box-shadow: 0 0.5px 15px 3px #8181814b;
   font-family: 'Junge', serif;
   font-weight: 400;
   text-align: center;
@@ -81,7 +81,7 @@ const HiddenContent = styled.div`
   top: 0;
   left: 0;
   background-color: #fcf8e8;
-  box-shadow: 0 0 10px 0.5px #aaa9a92f;
+  box-shadow: 0 0.5px 15px 3px #8181814b;
   animation: ${slideIn} 0.3s ease-in;
 `
 const arrowAction = keyframes`
