@@ -1,105 +1,176 @@
 import React from 'react'
-import { MdFavoriteBorder, MdFavorite } from 'react-icons/md'
-import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
-import styled from 'styled-components'
+import { MdFavorite } from 'react-icons/md'
+import { IoIosArrowUp } from 'react-icons/io'
+import styled, { keyframes } from 'styled-components'
 import { BookSearchApi } from '../types/Model'
 import { OPEN_LIBRARY_COVERS_BASE_API } from '../constants/endpoints'
 
 const BookItem = styled.article`
-  width: 70%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  border-bottom: 1px solid black;
-  margin: 20px auto;
-  padding: 8px 15px;
+  justify-content: flex-start;
+  align-items: center;
   position: relative;
+  padding: 20px 6px;
+  background-color: white;
+  box-shadow: 0 0 10px 0.5px #aaa9a92f;
   font-family: 'Junge', serif;
   font-weight: 400;
-`
-const Header = styled.h3`
-  margin: 10px 0;
-  font-size: 1.1rem;
-`
-const Paragraph = styled.p`
-  margin: 5px 0;
-  padding-bottom: 10px;
-  font-size: 1rem;
-  color: #7895b2;
-  font-family: 'Inconsolata', monospace;
-`
+  text-align: center;
 
-const IconToLike = styled(MdFavoriteBorder)`
-  position: absolute;
-  right: 20px;
-  top: 20px;
-  cursor: pointer;
-  transition: all 0.1s;
-  &:active {
-    transform: scale(1.2);
-    color: #f75e5e;
+  img {
+    max-height: 150px;
+    max-width: 70%;
+    box-shadow: 0 0 8px 2px #6968687b;
+    object-fit: cover;
   }
 `
-const IconLiked = styled(MdFavorite)`
+const BookTitleHeader = styled.h3`
   position: absolute;
-  right: 20px;
+  top: 200px;
+  padding: 0 6px;
+  max-height: 50px;
+  max-width: 90%;
+  overflow: auto;
+  font-size: 0.87rem;
+`
+const AuthorsNames = styled.p`
+  position: absolute;
+  top: 260px;
+  padding: 0 6px 10px 6px;
+  max-width: 90%;
+  overflow: auto;
+  max-height: 30px;
+  font-size: 0.87rem;
+  color: #94b49f;
+  font-family: 'Inconsolata', monospace;
+`
+const IconToLike = styled(MdFavorite)`
+  position: absolute;
+  right: 10px;
   top: 20px;
-  color: #f75e5e;
   cursor: pointer;
 `
-const IconArrowOpen = styled(IoIosArrowDown)`
-  position: absolute;
-  right: 20px;
-  top: 52px;
-  cursor: pointer;
+const IconLiked = styled(IconToLike)`
+  color: #df7861;
 `
-const IconArrowClose = styled(IoIosArrowUp)`
-  position: absolute;
-  right: 20px;
-  top: 52px;
-  cursor: pointer;
+
+const slideIn = keyframes`
+  0%{
+    transform: translateY(100%);
+  }
+  25%{
+    transform: translateY(75%);
+  }
+  50%{
+    transform: translateY(50%);
+  }
+  75%{
+    transform: translateY(25%);
+  }
+  100%{
+    transform: translateY(0%);
+  }
 `
+
 const HiddenContent = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-auto-rows: min-content;
-  padding: 8px 0;
+  width: 100%;
+  height: 100%;
+  padding: 15px 10px 15px 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #fcf8e8;
+  box-shadow: 0 0 10px 0.5px #aaa9a92f;
+  animation: ${slideIn} 0.3s ease-in;
+`
+const arrowAction = keyframes`
+  0%, 100%{
+    transform: translateY(10px);
+  }
+  50%{
+    transform: translateY(-10px);
+  }
+`
+const ShowBookInfo = styled(IoIosArrowUp)`
+  cursor: pointer;
+  position: absolute;
+  bottom: 10px;
+  width: 50px;
+  height: 30px;
+  color: #94b49f;
+  font-family: 'Carrois Gothic', sans-serif;
+  font-size: 0.6rem;
+  &:hover {
+    animation: ${arrowAction} 0.9s ease-in-out infinite;
+  }
+`
+const BookInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: left;
+  font-family: 'Inconsolata', monospace;
+  color: black;
   line-height: 1.5;
-  font-weight: 600;
-  font-size: 0.8rem;
+  font-weight: 400;
+  max-height: 90%;
+  overflow: auto;
+  font-size: 0.9rem;
+
   li {
     list-style: circle;
   }
 `
-const BookInfo = styled.div`
-  grid-column: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`
-const BookCover = styled.div`
-  grid-column: 2;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  img {
-    max-height: 200px;
-    box-shadow: 0 0 8px 2px #6968687b;
+const CloseBookInfo = styled.span`
+  position: absolute;
+  right: 50%;
+  bottom: 8px;
+  color: #df7861;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  &:hover {
+    transform: rotate(180deg);
   }
 `
 type Props = {
   book: BookSearchApi
 }
+
 export const BookCard: React.FC<Props> = ({ book }) => {
-  const [showContent, setShowContent] = React.useState<boolean>(false)
   const [isFavorite, setIsFavorite] = React.useState<boolean>(false)
+  const [isContentOpen, setIsContentOpen] = React.useState<boolean>(false)
+
+  const subjectsToShow = (): JSX.Element[] => {
+    const subjectsArray: string[] = book.subject
+    if (!subjectsArray) {
+      return []
+    }
+    return subjectsArray.slice(0, 10).map((sub) => <li key={sub}>{sub}</li>)
+  }
 
   return (
     <BookItem>
-      <Header>{book.title}</Header>
-      <Paragraph>{book.author_name}</Paragraph>
+      <img
+        src={
+          book.cover_edition_key
+            ? OPEN_LIBRARY_COVERS_BASE_API(book.cover_edition_key)
+            : require('../images/no-image.png')
+        }
+        alt={
+          book?.cover_edition_key
+            ? `Cover of the book ${book.title}`
+            : `The book ${book.title} has no cover available`
+        }
+      />
+
+      <BookTitleHeader>{book.title}</BookTitleHeader>
+      <AuthorsNames>
+        {book.author_name?.length > 3 || book.author_name
+          ? book.author_name.slice(0, 2).join('; ')
+          : null}
+      </AuthorsNames>
       {isFavorite ? (
         <IconLiked
           title="Remove from Favorites"
@@ -112,41 +183,28 @@ export const BookCard: React.FC<Props> = ({ book }) => {
         />
       )}
 
-      {!showContent ? (
-        <IconArrowOpen title="Read more" onClick={() => setShowContent(true)} />
-      ) : (
-        <IconArrowClose title="Close" onClick={() => setShowContent(false)} />
-      )}
+      <ShowBookInfo title="Read more" onClick={() => setIsContentOpen(true)} />
 
-      {showContent ? (
+      {isContentOpen ? (
         <HiddenContent>
           <BookInfo>
             <p>
-              <strong>Published Year:</strong> {book.first_publish_year}
+              <strong>Year Published:</strong> {book.first_publish_year}
+              <br />
+              <strong>Pages:</strong> {book.number_of_pages_median}
+              <br />
+              <strong>All Authors:</strong>{' '}
+              {(book.author_name || []).join('; ')}
             </p>
-            <p>
-              <strong>Genre:</strong>
-              {book.subject
-                ? book.subject
-                    .slice(0, 10)
-                    .map((sub) => <li key={sub}>{sub}</li>)
-                : null}
-            </p>
+            <strong>Genres:</strong>
+            {subjectsToShow()}
+            <CloseBookInfo
+              title="Close"
+              onClick={() => setIsContentOpen(false)}
+            >
+              X
+            </CloseBookInfo>
           </BookInfo>
-          <BookCover>
-            <img
-              src={
-                book.cover_edition_key
-                  ? OPEN_LIBRARY_COVERS_BASE_API(book.cover_edition_key)
-                  : require('../images/no-image.png')
-              }
-              alt={
-                book?.cover_edition_key
-                  ? `Cover of the book ${book.title}`
-                  : `The book ${book.title} has no cover available`
-              }
-            />
-          </BookCover>
         </HiddenContent>
       ) : null}
     </BookItem>
