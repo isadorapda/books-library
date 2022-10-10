@@ -1,161 +1,55 @@
 import React from 'react'
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import {
   OPEN_LIBRARY_BASE_API,
   OPEN_LIBRARY_BOOKS_API,
   OPEN_LIBRARY_SEARCH_API,
   OPEN_LIBRARY_COVERS_BASE_API,
-} from '../constants/endpoints'
-import { DataSearchApi, BookSearchApi, BookApi } from '../types/Model'
-import { containsStringFromArray } from '../utils/containsStringFromArray'
+} from '../../constants/endpoints'
+import { DataSearchApi, BookSearchApi, BookApi } from '../../types/Model'
+import { containsStringFromArray } from '../../utils/containsStringFromArray'
+import {
+  Container,
+  MainHeading,
+  Heading,
+  LoadingBook,
+} from '../../GlobalStyling/GlobalStyles'
+import {
+  Button,
+  RandomBookContainer,
+  CoverContainer,
+  BookInfo,
+} from './RandomBookStyles'
 
-const API_BOOK_LANGUAGE = '/languages/eng'
-
-const RandomWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 70vw;
-  position: relative;
-  h1 {
-    margin: 100px 0 50px 0;
-  }
-  h3 {
-    color: #94b49f;
-  }
-`
-const Button = styled.button`
-  margin: 90px 0;
-  width: 200px;
-  padding: 10px 15px;
-  box-shadow: 2px 2px 9px 0.5px #8181817b;
-  border-radius: 8px;
-  border: transparent;
-  background-color: #ecb390;
-  color: #df7861;
-  text-transform: uppercase;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  &:hover {
-    color: white;
-    box-shadow: 4px 4px 5px 1px #8181817b;
-  }
-`
-const flash = keyframes`
-  0%{
-    background-color: #ecb390;
-    box-shadow: 32px 0 #ecb390, -32px 0 #df7861;
-  }
-  50%{
-    background-color: #df7861;
-    box-shadow: 32px 0 #ecb390, -32px 0  #ecb390;
-  }
-  100%{
-    background-color: #ecb390;
-    box-shadow: 32px 0 #df7861, -32px 0  #df7861; 
-  }
-`
-const appear = keyframes`
-  0%{
-opacity: 1;
-width: 0;
-  }
-  100%{
-    opacity: 1;
-width: 80%;
-  }
-`
-const LoadinBook = styled.span`
-  margin-top: 50px;
-  &.loader {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: #df7861;
-    box-shadow: 32px 0 #df7861, -32px 0 #df7861;
-    position: relative;
-    animation: ${flash} 0.5s ease-out infinite alternate;
-  }
-`
-const slideIn = keyframes`
-  0%{
-    transform: translateX(-100%);
-  }
-  100%{
-    transform: translateX(0%);
+const H1 = styled(MainHeading)`
+  font-size: 2rem;
+  @media screen and (min-width: 1536px) {
+    margin-top: 90px;
+    font-size: 2rem;
   }
 
+  @media screen and (min-width: 820px) and (max-width: 1023px) {
+    font-size: 1.3rem;
+  }
+  @media screen and (max-width: 819px) {
+    font-size: 1.2rem;
+  }
 `
-const RandomBookContainer = styled.div`
-  width: 100vw;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  margin-bottom: 30px;
-`
-const CoverContainer = styled.div`
-  background-color: #94b49f;
-  height: 500px;
-  width: 100%;
-  grid-column: 1;
-  box-shadow: 4px 4px 5px 1px #8181817b;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: ${slideIn} 0.5s ease-in;
-  img {
-    height: 70%;
-    object-fit: cover;
-    box-shadow: 0 0 10px 1px #8181817b;
+const H2 = styled(Heading)`
+  font-size: 1.4rem;
+  @media screen and (min-width: 1536px) {
+    font-size: 1.6rem;
+  }
+
+  @media screen and (min-width: 820px) and (max-width: 1023px) {
+    font-size: 1.2rem;
+  }
+  @media screen and (max-width: 819px) {
+    font-size: 1.1rem;
   }
 `
 
-const BookInfo = styled.div`
-  grid-column: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  margin-left: 30px;
-  margin-bottom: 50px;
-  overflow: hidden;
-  white-space: nowrap;
-  opacity: 0;
-  animation: ${appear} 4s steps(60, end) forwards;
-
-  h2 {
-    margin-bottom: 20px;
-    max-width: 200px;
-    font-weight: 300;
-    text-transform: capitalize;
-    letter-spacing: 1px;
-    animation-delay: 1s;
-  }
-  h3 {
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #94b49f;
-    margin-bottom: 20px;
-    font-size: 1rem;
-    animation-delay: 2s;
-    width: 70%;
-  }
-`
-const ListGenres = styled.div`
-  display: flex;
-  flex-direction: column;
-  h4 {
-    margin-bottom: 15px;
-    animation-delay: 1.4s;
-  }
-  li {
-    animation-delay: 1.6s;
-    line-height: 20px;
-    list-style: circle;
-  }
-`
+const API_BOOK_LANGUAGE = '/languages/eng'
 
 const DEFAULT_STATE_BOOK_SEARCH_API: BookSearchApi = {
   title: '',
@@ -230,13 +124,13 @@ export const RandomBook: React.FC = () => {
   }, [book, getRandomBook])
 
   return (
-    <RandomWrapper>
-      <h1>Feeling Adventorous?</h1>
-      <h3>Let us surprise you in your next reading!</h3>
+    <Container>
+      <H1>Feeling Adventorous?</H1>
+      <H2 color="#94b49f">Let us surprise you in your next reading!</H2>
       <Button onClick={getRandomBook}>Surprise me!</Button>
 
       {isLoading ? (
-        <LoadinBook className="loader"></LoadinBook>
+        <LoadingBook className="loader"></LoadingBook>
       ) : (
         <RandomBookContainer>
           {firstClickHappened.current ? (
@@ -247,7 +141,7 @@ export const RandomBook: React.FC = () => {
                     ? OPEN_LIBRARY_COVERS_BASE_API(
                         bookDetails.cover_edition_key
                       )
-                    : require('../images/no-image.png')
+                    : require('../../images/no-image.png')
                 }
                 alt={
                   bookDetails?.cover_edition_key
@@ -261,16 +155,16 @@ export const RandomBook: React.FC = () => {
             <h2>{book.title}</h2>
             <h3>{(bookDetails?.author_name || []).join('; ')}</h3>
             {firstClickHappened.current ? (
-              <ListGenres>
+              <div>
                 <h4>Genres:</h4>
                 {(bookDetails?.subject || []).slice(0, 10).map((sub) => (
                   <li key={sub}>{sub}</li>
                 ))}
-              </ListGenres>
+              </div>
             ) : null}
           </BookInfo>
         </RandomBookContainer>
       )}
-    </RandomWrapper>
+    </Container>
   )
 }

@@ -1,9 +1,8 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import { Home } from './screens/Home'
+import { Home } from './screens/Home/Home'
 import { Favorites } from './screens/Favorites'
-import { RandomBook } from './screens/RandomBook'
-import './GlobalStyling/GlobalStyle.css'
+import { RandomBook } from './screens/RandomBook/'
 import Search from './screens/Search'
 
 function App() {
